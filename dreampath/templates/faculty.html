@@ -1,0 +1,48 @@
+{# faculty.html - Faculty console: verify, add, edit, delete lessons. #}
+{% extends "base.html" %}
+{% block title %}Faculty · DreamPath AI{% endblock %}
+{% block content %}
+<section class="container page" data-faculty>
+  <header class="page-head row-between">
+    <div>
+      <p class="eyebrow">Faculty</p>
+      <h1>Verify and update roadmaps</h1>
+    </div>
+    <button class="btn btn-primary" type="button" data-add>Add lesson</button>
+  </header>
+
+  <div class="grid grid-5 overview" data-overview></div>
+
+  <div class="tabs" role="group" aria-label="Streams" data-tabs></div>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Phase</th><th>Step</th><th class="num-col">Min</th><th class="num-col">Weight</th><th class="num-col">Tier</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
+      <tbody data-rows></tbody>
+    </table>
+  </div>
+
+  <dialog class="dialog" data-dialog aria-labelledby="dlg-title">
+    <form method="dialog" data-form novalidate>
+      <h2 class="h-sm" id="dlg-title" data-dialog-title>Add lesson</h2>
+      <div class="field"><label for="f-title">Title</label><input id="f-title" name="title" maxlength="160" required></div>
+      <div class="field"><label for="f-url">Video link</label><input id="f-url" name="url" type="url" maxlength="500" required placeholder="https://"></div>
+      <div class="form-grid">
+        <div class="field"><label for="f-phase">Phase</label>
+          <select id="f-phase" name="phase">{% for n, name in phases.items() %}<option value="{{ n }}">{{ n }}. {{ name }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="f-min">Minutes</label><input id="f-min" name="duration_min" type="number" min="1" max="3000" required></div>
+        <div class="field"><label for="f-weight">Weight (1-10)</label><input id="f-weight" name="weight" type="number" min="1" max="10" required></div>
+        <div class="field"><label for="f-tier">Minimum tier</label>
+          <select id="f-tier" name="min_tier"><option value="0">0 Starter</option><option value="1">1 Growth</option><option value="2">2 Pro</option><option value="3">3 Elite</option></select></div>
+      </div>
+      <label class="check"><input type="checkbox" name="verified"> Mark as verified</label>
+      <p class="form-error" data-error role="alert" hidden></p>
+      <div class="dialog-actions">
+        <button class="btn btn-ghost" type="button" data-cancel>Cancel</button>
+        <button class="btn btn-primary" type="submit">Save lesson</button>
+      </div>
+    </form>
+  </dialog>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/page-faculty.js') }}" defer></script>{% endblock %}

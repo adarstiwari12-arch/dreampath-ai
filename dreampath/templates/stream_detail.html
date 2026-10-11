@@ -1,0 +1,90 @@
+{# stream_detail.html - Public stream preview: full curriculum, depth by package, start button. #}
+{% extends "base.html" %}
+{% block title %}{{ stream.name }} roadmap · DreamPath AI{% endblock %}
+{% block og_title %}{{ stream.name }} roadmap · DreamPath AI{% endblock %}
+{% block description %}{{ stream.description }}{% endblock %}
+{% block content %}
+<section class="stream-hero">
+  <div class="container stream-hero-grid">
+    <div>
+      <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ url_for('pages.landing') }}">Home</a><span aria-hidden="true">/</span><a href="{{ url_for('pages.landing') }}#streams">Streams</a><span aria-hidden="true">/</span><span>{{ stream.name }}</span></nav>
+      {{ thumb(stream.slug) }}
+      <h1>{{ stream.name }}</h1>
+      <p class="lead">{{ stream.description }}</p>
+      <div class="fact-row">
+        <span><strong>{{ stream.total_lessons }}</strong> lessons</span>
+        <span><strong>{{ stream.total_hours }}</strong> hours</span>
+        <span><strong>{{ phases|length }}</strong> phases</span>
+        <span><strong>4</strong> package tiers</span>
+      </div>
+    </div>
+    <div>
+      {% if g.user and g.user['role'] == 'student' %}
+        <a class="btn btn-primary btn-lg" href="{{ url_for('pages.setup', stream=stream.slug) }}">Use this stream {{ icon('arrow-right') }}</a>
+      {% elif not g.user %}
+        <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register', stream=stream.slug) }}">Start this path free {{ icon('arrow-right') }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="container two-col">
+    <div>
+      <div class="card-head"><h2>Curriculum</h2><span class="muted small">{{ stream.total_lessons }} lessons &middot; {{ stream.minutes[-1]|duration }}</span></div>
+      <div class="curriculum">
+        {% for ph in phases %}
+        <details class="section-card" {% if loop.first %}open{% endif %}>
+          <summary>
+            <span class="section-title">{{ ph.phase }}. {{ ph.name }}</span>
+            <span class="section-meta">{{ ph.steps|length }} lessons &middot; {{ ph.minutes|duration }}</span>
+          </summary>
+          <ul class="lessons">
+            {% for s in ph.steps %}
+            <li class="lesson">
+              <span class="thumb {{ 'thumb-' ~ stream.slug }}" aria-hidden="true">{{ icon('play') }}</span>
+              <div>
+                <p class="lesson-title"><span class="t">{{ s.title }}</span>{% if s.verified %}<span class="badge badge-ok">Verified</span>{% endif %}{% if s.min_tier > 0 %}<span class="badge badge-accent">{{ TIERS[s.min_tier].name }}+</span>{% endif %}</p>
+                <div class="lesson-meta"><span>{{ icon('clock') }} {{ s.duration_min|duration }}</span><span>{{ s.weight }} pts</span></div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </details>
+        {% endfor %}
+      </div>
+    </div>
+
+    <aside class="stack sticky">
+      <div class="card side-card">
+        <h3>Depth by package</h3>
+        <p class="muted small">A higher target unlocks more advanced lessons.</p>
+        <table class="mini-table">
+          {% for t in TIERS %}
+          <tr><td><strong>{{ t.name }}</strong><br><span class="muted tiny">{% if t.level == 3 %}{{ t.min }} LPA +{% else %}{{ t.min }} to {{ t.max }} LPA{% endif %}</span></td><td>{{ stream.lessons[t.level] }} lessons<br>{{ stream.minutes[t.level]|duration }}</td></tr>
+          {% endfor %}
+        </table>
+        {% if g.user and g.user['role'] == 'student' %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('pages.setup', stream=stream.slug) }}">Use this stream</a>
+        {% elif not g.user %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('auth.register', stream=stream.slug) }}">Start free</a>
+        {% endif %}
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head"><h2>Explore other streams</h2></div>
+    <div class="grid grid-4">
+      {% for s in others %}
+      <a class="stream-card" href="{{ url_for('pages.stream_detail', slug=s.slug) }}">
+        {{ banner(s.slug) }}
+        <span class="body"><h3>{{ s.name }}</h3><span class="meta"><span class="badge">{{ s.total_lessons }} lessons</span><span class="badge">{{ s.total_hours }} h</span></span></span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

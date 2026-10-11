@@ -1,0 +1,138 @@
+{# base.html - Page shell: header (nav, search, account menu), flash messages, footer. Every page extends this. #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}DreamPath AI{% endblock %}</title>
+  <meta name="description" content="{% block description %}DreamPath AI turns your stream and dream package into a step-by-step video roadmap, and tracks your progress with the Dream Meter.{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}DreamPath AI{% endblock %}">
+  <meta property="og:description" content="Pick your stream, set your dream package, and see exactly how far you are.">
+  <meta property="og:type" content="website">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="theme-color" content="#0b6b73">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container header-row">
+      <a class="brand" href="{{ url_for('pages.landing') }}" aria-label="DreamPath AI home">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M7 24c6 0 4-8 9-8s3-8 9-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="25" cy="8" r="2.6" fill="#f2b45a"/></svg>
+        <span>DreamPath<span class="brand-ai"> AI</span></span>
+      </a>
+
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="header-panel">
+        <span class="sr-only">Menu</span>{{ icon('menu') }}
+      </button>
+
+      <div class="header-panel" id="header-panel">
+        {% set ep = request.endpoint %}
+        {% if g.user and g.user['role'] == 'student' %}
+          <nav class="nav" aria-label="Main">
+            <a href="{{ url_for('pages.dashboard') }}" {% if ep == 'pages.dashboard' %}aria-current="page"{% endif %}>My learning</a>
+            <a href="{{ url_for('pages.roadmap') }}" {% if ep == 'pages.roadmap' %}aria-current="page"{% endif %}>Curriculum</a>
+            <a href="{{ url_for('pages.mentor') }}" {% if ep == 'pages.mentor' %}aria-current="page"{% endif %}>AI Mentor</a>
+          </nav>
+          <form class="header-search" action="{{ url_for('pages.roadmap') }}" method="get" role="search">
+            {{ icon('search') }}
+            <label class="sr-only" for="header-q">Search lessons</label>
+            <input id="header-q" type="search" name="q" placeholder="Search lessons" maxlength="80" autocomplete="off">
+          </form>
+        {% elif g.user %}
+          <nav class="nav" aria-label="Main">
+            <a href="{{ url_for('pages.faculty') }}" {% if ep == 'pages.faculty' %}aria-current="page"{% endif %}>Faculty console</a>
+          </nav>
+        {% else %}
+          <nav class="nav" aria-label="Main">
+            <a href="{{ url_for('pages.landing') }}#streams">Streams</a>
+            <a href="{{ url_for('pages.landing') }}#how">How it works</a>
+            <a href="{{ url_for('pages.landing') }}#meter">Dream Meter</a>
+            <a href="{{ url_for('pages.landing') }}#faq">FAQ</a>
+          </nav>
+        {% endif %}
+
+        <div class="header-actions">
+          {% if g.user %}
+            {% set parts = g.user['name'].split() %}
+            <div class="user-menu" data-menu>
+              <button class="avatar" type="button" aria-expanded="false" aria-controls="user-menu-panel" aria-label="Account menu">{{ ((parts[0][0] ~ (parts[-1][0] if parts|length > 1 else '')) | upper) }}</button>
+              <div class="menu-panel" id="user-menu-panel" hidden>
+                <div class="menu-head"><strong>{{ g.user['name'] }}</strong><span class="muted small">{{ g.user['email'] }}</span></div>
+                {% if g.user['role'] == 'student' %}
+                  <a href="{{ url_for('pages.dashboard') }}">{{ icon('layers') }} My learning</a>
+                  <a href="{{ url_for('pages.setup') }}">{{ icon('target') }} Change plan</a>
+                {% else %}
+                  <a href="{{ url_for('pages.faculty') }}">{{ icon('shield') }} Faculty console</a>
+                {% endif %}
+                <a href="{{ url_for('auth.account') }}">{{ icon('settings') }} Account settings</a>
+                <form method="post" action="{{ url_for('auth.logout') }}">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button class="menu-item" type="submit">{{ icon('logout') }} Log out</button>
+                </form>
+              </div>
+            </div>
+          {% else %}
+            <a class="btn btn-ghost btn-sm" href="{{ url_for('auth.login', next=(request.full_path.rstrip('?') if request.method == 'GET' and ep not in ('auth.login', 'auth.register', 'pages.landing') else None)) }}">Log in</a>
+            <a class="btn btn-dark btn-sm" href="{{ url_for('auth.register') }}">Sign up free</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {% block flash %}
+  <div class="container flash-area" aria-live="polite">{% include "_flashes.html" %}</div>
+  {% endblock %}
+
+  <main id="main">{% block content %}{% endblock %}</main>
+
+  {% block footer %}
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="{{ url_for('pages.landing') }}"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M7 24c6 0 4-8 9-8s3-8 9-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="25" cy="8" r="2.6" fill="#f2b45a"/></svg><span>DreamPath<span class="brand-ai"> AI</span></span></a>
+          <p class="muted footer-blurb">AI-powered student skill and career intelligence platform for engineering students.</p>
+        </div>
+        <div>
+          <h4>Streams</h4>
+          <ul>
+            <li><a href="{{ url_for('pages.stream_detail', slug='cse') }}">Computer Science</a></li>
+            <li><a href="{{ url_for('pages.stream_detail', slug='ece') }}">Electronics &amp; Communication</a></li>
+            <li><a href="{{ url_for('pages.stream_detail', slug='eee') }}">Electrical</a></li>
+            <li><a href="{{ url_for('pages.stream_detail', slug='mech') }}">Mechanical</a></li>
+            <li><a href="{{ url_for('pages.stream_detail', slug='civil') }}">Civil</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="{{ url_for('pages.landing') }}#how">How it works</a></li>
+            <li><a href="{{ url_for('pages.landing') }}#meter">Dream Meter</a></li>
+            <li><a href="{{ url_for('pages.landing') }}#faq">FAQ</a></li>
+            {% if g.user %}<li><a href="{{ url_for('auth.account') }}">Account</a></li>{% else %}<li><a href="{{ url_for('auth.login') }}">Log in</a></li>{% endif %}
+          </ul>
+        </div>
+        <div>
+          <h4>Project</h4>
+          <ul class="muted">
+            <li>Mini Project BCC-351</li>
+            <li>Group G1, CSE-1</li>
+            <li>IMS Engineering College, Ghaziabad</li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-bottom">&copy; DreamPath AI. Built as a college mini project.</p>
+    </div>
+  </footer>
+  {% endblock %}
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='js/core.js') }}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,50 @@
+{# roadmap.html - Curriculum: collapsible phases, tick-able lessons, search, filter, sort. #}
+{% extends "base.html" %}
+{% block title %}Curriculum · DreamPath AI{% endblock %}
+{% block content %}
+<section class="container page" data-roadmap>
+  <header class="page-head">
+    <p class="eyebrow" data-subtitle>&nbsp;</p>
+    <h1>Your curriculum</h1>
+    <p class="muted">Work through the lessons in order, or jump to what you need. Tick a lesson when you finish it.</p>
+  </header>
+
+  <div class="two-col">
+    <div>
+      <div class="toolbar">
+        <div class="search">{{ icon('search') }}<label class="sr-only" for="lesson-search">Search lessons</label><input id="lesson-search" type="search" placeholder="Search lessons" maxlength="80" autocomplete="off" data-search></div>
+        <div class="segmented" role="group" aria-label="Filter lessons">
+          <button type="button" class="seg" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" class="seg" data-filter="todo" aria-pressed="false">To do</button>
+          <button type="button" class="seg" data-filter="done" aria-pressed="false">Done</button>
+        </div>
+        <label class="select-label">Order
+          <select data-sort><option value="path">Learning path</option><option value="value">Best value (pts/hour)</option></select>
+        </label>
+        <button class="btn btn-ghost btn-sm" type="button" data-expand>Expand all</button>
+      </div>
+      <div class="curriculum" data-phases aria-live="polite"><div class="skeleton h-40"></div><div class="skeleton h-24"></div></div>
+      <p class="muted small side-note">Lesson links open a YouTube search for the topic. Lessons marked Verified have been reviewed by faculty.</p>
+    </div>
+
+    <aside class="stack sticky" data-side>
+      <div class="card side-meter">
+        <div class="ring-wrap" data-ring></div>
+        <p class="strong" data-label>&nbsp;</p>
+        <ul class="side-list">
+          <li><span>Lessons done</span><span class="strong num" data-side="lessons">-</span></li>
+          <li><span>Video left</span><span class="strong num" data-side="hours">-</span></li>
+          <li><span>Estimated finish</span><span class="strong" data-side="finish">-</span></li>
+        </ul>
+      </div>
+      <div class="card" data-next-card hidden>
+        <p class="eyebrow">Up next</p>
+        <p class="strong" data-next-title></p>
+        <p class="muted small" data-next-meta></p>
+        <a class="btn btn-primary btn-block" data-next-link target="_blank" rel="noopener noreferrer" href="#">{{ icon('play') }} Watch lesson</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/page-roadmap.js') }}" defer></script>{% endblock %}

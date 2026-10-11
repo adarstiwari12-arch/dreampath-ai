@@ -1,0 +1,78 @@
+{# setup.html - Onboarding: choose stream, package (LPA) and study pace. #}
+{% extends "base.html" %}
+{% block title %}Set up your learning path · DreamPath AI{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<section class="page" data-setup data-slug="{{ preselect or current.slug }}" data-lpa="{{ current.lpa or 10 }}" data-pace="{{ current.pace or 1.5 }}" data-next="{{ next_url }}" data-existing="{{ 'true' if current.slug else 'false' }}">
+  <div class="container-mid">
+    <header class="page-head">
+      <p class="eyebrow">{{ 'Update your plan' if current.slug else 'Welcome, let us set you up' }}</p>
+      <h1>Set up your learning path</h1>
+      <p class="muted">Three quick choices. You can change any of them later, and your progress in each stream is kept separately.</p>
+      <ol class="stepper" aria-label="Setup steps">
+        <li data-step-ind="stream"><span>1</span> Stream</li>
+        <li data-step-ind="package"><span>2</span> Package</li>
+        <li data-step-ind="pace"><span>3</span> Pace</li>
+      </ol>
+    </header>
+
+    <div class="setup-block">
+      <h2><span class="n">1</span> Choose your stream</h2>
+      <details class="assist">
+        <summary>{{ icon('sparkles') }} Not sure? Let AI suggest a stream</summary>
+        <div class="inner">
+          <p class="muted small">Describe what you enjoy building, fixing or learning.</p>
+          <div class="field"><label class="sr-only" for="interests">Your interests</label>
+            <textarea id="interests" rows="3" maxlength="800" placeholder="Example: I love building apps and solving puzzles, and I'm curious about AI."></textarea></div>
+          <div class="row"><button class="btn btn-ghost btn-sm" type="button" data-recommend>Suggest a stream</button><p class="small muted" data-recommend-result role="status"></p></div>
+        </div>
+      </details>
+      <div class="grid grid-5 stream-picks" role="group" aria-label="Stream" data-streams>
+        {% for s in streams %}
+        <button type="button" class="pick" aria-pressed="false" data-slug="{{ s.slug }}" data-name="{{ s.name }}"
+                data-lessons="{{ s.lessons|join(',') }}" data-minutes="{{ s.minutes|join(',') }}">
+          <span class="check-dot">{{ icon('check') }}</span>
+          {{ banner(s.slug) }}
+          <span class="body"><strong>{{ s.name }}</strong><span class="t">{{ s.tagline }}</span></span>
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="setup-block">
+      <h2><span class="n">2</span> Set your dream package</h2>
+      <div class="card">
+        <div class="package-top">
+          <div><label for="lpa" class="label">Target package</label><p class="package-value"><span data-lpa-value>10</span> <span class="muted small">LPA</span></p></div>
+          <p class="muted small" data-tier-blurb></p>
+        </div>
+        <input id="lpa" type="range" min="3" max="60" step="0.5" value="{{ current.lpa or 10 }}">
+        <div class="range-scale" aria-hidden="true"><span>3</span><span>12</span><span>25</span><span>60</span></div>
+        <div class="tier-strip" data-tiers>
+          {% for t in tiers %}
+          <div class="tier-pill" data-tier="{{ t.level }}" data-min="{{ t.min }}"><strong>{{ t.name }}</strong><span class="muted tiny">{% if t.level == 3 %}{{ t.min }} LPA +{% else %}{{ t.min }} to {{ t.max }} LPA{% endif %}</span></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-block">
+      <h2><span class="n">3</span> Pick your study pace</h2>
+      <div class="card">
+        <p class="muted small">How many hours can you realistically study each day? We use this to estimate your finish date.</p>
+        <div class="chips" role="group" aria-label="Hours per day" data-pace>
+          {% for h in ['0.5', '1', '1.5', '2', '3', '4'] %}<button type="button" class="chip" aria-pressed="false" data-hours="{{ h }}">{{ h }} h/day</button>{% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-bar">
+    <div class="container-mid row-between">
+      <p class="summary-text" data-summary role="status">Choose a stream to see your plan.</p>
+      <button class="btn btn-primary btn-lg" type="button" data-save disabled>{{ 'Save changes' if current.slug else 'Build my roadmap' }}</button>
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/page-setup.js') }}" defer></script>{% endblock %}

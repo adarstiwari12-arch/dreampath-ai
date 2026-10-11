@@ -1,0 +1,63 @@
+{# account.html - Account settings: password, reset progress, delete account. #}
+{% extends "base.html" %}
+{% block title %}Account · DreamPath AI{% endblock %}
+{% block content %}
+{% set parts = g.user['name'].split() %}
+<section class="container page">
+  <header class="page-head"><p class="eyebrow">Account</p><h1>Account settings</h1></header>
+  <div class="account-grid">
+    <aside class="card profile-card">
+      <div class="avatar avatar-lg" aria-hidden="true">{{ ((parts[0][0] ~ (parts[-1][0] if parts|length > 1 else '')) | upper) }}</div>
+      <h2 class="h-sm">{{ g.user['name'] }}</h2>
+      <p class="muted small">{{ g.user['email'] }}</p>
+      <span class="badge badge-brand">{{ g.user['role']|capitalize }}</span>
+      {% if g.user['role'] == 'student' %}
+      <hr class="divider">
+      <ul class="context-list">
+        <li><span>Target</span><span class="strong">{% if g.user['target_lpa'] %}{{ g.user['target_lpa'] }} LPA{% else %}Not set{% endif %}</span></li>
+        <li><span>Pace</span><span class="strong">{{ g.user['daily_hours'] }} h/day</span></li>
+      </ul>
+      <a class="btn btn-ghost btn-sm btn-block edit-plan" href="{{ url_for('pages.setup') }}">Edit learning plan</a>
+      {% endif %}
+    </aside>
+
+    <div class="account-stack">
+      <div class="card">
+        <h2 class="h-sm">Change password</h2>
+        <form method="post" novalidate>
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="change_password">
+          <div class="field"><label for="cp">Current password</label><input id="cp" name="current_password" type="password" autocomplete="current-password" required maxlength="128"></div>
+          <div class="form-grid">
+            <div class="field"><label for="np">New password</label><input id="np" name="new_password" type="password" autocomplete="new-password" required minlength="8" maxlength="128"></div>
+            <div class="field"><label for="cf">Confirm new password</label><input id="cf" name="confirm_password" type="password" autocomplete="new-password" required maxlength="128"></div>
+          </div>
+          <button class="btn btn-primary" type="submit">Update password</button>
+        </form>
+      </div>
+      {% if g.user['role'] == 'student' %}
+      <div class="card">
+        <h2 class="h-sm">Reset progress</h2>
+        <p class="muted small">Clears every tick across all streams. Your account and plan stay.</p>
+        <form method="post" data-confirm="Reset all your progress? This cannot be undone.">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="reset_progress">
+          <div class="field"><label for="rp">Current password</label><input id="rp" name="current_password" type="password" autocomplete="current-password" required maxlength="128"></div>
+          <button class="btn btn-danger-ghost" type="submit">Reset progress</button>
+        </form>
+      </div>
+      {% endif %}
+      <div class="card">
+        <h2 class="h-sm">Delete account</h2>
+        <p class="muted small">Permanently removes your account, progress and chat history.</p>
+        <form method="post" data-confirm="Delete your account and all data permanently?">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="action" value="delete_account">
+          <div class="field"><label for="da">Current password</label><input id="da" name="current_password" type="password" autocomplete="current-password" required maxlength="128"></div>
+          <button class="btn btn-danger" type="submit">Delete my account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

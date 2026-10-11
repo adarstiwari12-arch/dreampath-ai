@@ -1,0 +1,6 @@
+{# _flashes.html - Partial: renders flash messages (success / error / info). #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <p class="flash flash-{{ category }}" role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</p>
+  {% endfor %}
+{% endwith %}

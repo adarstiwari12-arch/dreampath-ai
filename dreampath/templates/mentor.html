@@ -1,0 +1,43 @@
+{# mentor.html - AI mentor chat with context panel. #}
+{% extends "base.html" %}
+{% block title %}AI Mentor · DreamPath AI{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<section class="container page" data-mentor>
+  <header class="page-head row-between">
+    <div>
+      <p class="eyebrow">AI Mentor</p>
+      <h1>Ask what to do next</h1>
+      <p class="muted">Your mentor can see your roadmap and progress, so answers are specific to you.</p>
+    </div>
+    <button class="btn btn-ghost btn-sm" type="button" data-clear>Clear chat</button>
+  </header>
+
+  <div class="chat-layout">
+    <div class="card chat">
+      <div class="chat-log" data-log role="log" aria-live="polite" aria-label="Conversation"></div>
+      <form class="chat-form" data-form>
+        <label for="msg" class="sr-only">Your question</label>
+        <input id="msg" type="text" maxlength="600" autocomplete="off" placeholder="Ask about your roadmap, time or placements">
+        <button class="btn btn-primary" type="submit">Send</button>
+      </form>
+    </div>
+    <aside class="stack">
+      <div class="card">
+        <div class="card-head"><h2>What your mentor sees</h2></div>
+        <ul class="context-list" data-context><li><span class="muted">Loading</span><span></span></li></ul>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Try asking</h2></div>
+        <div class="suggest" data-suggest>
+          <button type="button">What should I start with?</button>
+          <button type="button">How long will this take?</button>
+          <button type="button">How do I prepare for interviews?</button>
+        </div>
+        <p class="muted tiny mode-note" data-mode></p>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/page-mentor.js') }}" defer></script>{% endblock %}

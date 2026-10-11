@@ -1,0 +1,14 @@
+{# error.html - Friendly error page (404, 403, 500 ...). #}
+{% extends "base.html" %}
+{% block title %}{{ title }} · DreamPath AI{% endblock %}
+{% block content %}
+<section class="container-narrow error-page">
+  <p class="error-code">{{ code }}</p>
+  <h1>{{ title }}</h1>
+  <p class="muted">{{ message }}</p>
+  <div class="row error-actions">
+    <a class="btn btn-primary" href="{{ url_for('pages.landing') }}">Back to home</a>
+    {% if g.user and g.user['role'] == 'student' %}<a class="btn btn-ghost" href="{{ url_for('pages.dashboard') }}">My learning</a>{% elif not g.user %}<a class="btn btn-ghost" href="{{ url_for('auth.login') }}">Log in</a>{% endif %}
+  </div>
+</section>
+{% endblock %}

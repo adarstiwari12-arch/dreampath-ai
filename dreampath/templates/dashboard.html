@@ -1,0 +1,71 @@
+{# dashboard.html - My learning: continue card, stats, phase progress, study plan, AI gap analysis. #}
+{% extends "base.html" %}
+{% block title %}My learning · DreamPath AI{% endblock %}
+{% block content %}
+<section class="container page" data-dashboard>
+  <header class="page-head row-between">
+    <div>
+      <p class="eyebrow" data-stream-line>&nbsp;</p>
+      <h1>Welcome back, {{ g.user['name'].split()[0] }}</h1>
+      <p class="muted">Here is where you stand and what to do next.</p>
+    </div>
+    <a class="btn btn-ghost" href="{{ url_for('pages.setup') }}">{{ icon('target') }} Change plan</a>
+  </header>
+
+  <article class="card continue" data-continue>
+    {{ banner(stream_slug) }}
+    <div class="continue-body" data-continue-body><div class="skeleton h-24"></div></div>
+  </article>
+  <template id="tpl-check">{{ icon('check-circle') }}</template>
+
+  <div class="stat-grid">
+    <article class="card stat stat-meter">
+      <span class="k">{{ icon('target') }} Dream Meter</span>
+      <div class="ring-wrap ring-sm" data-ring></div>
+      <span class="s" data-label>&nbsp;</span>
+    </article>
+    <article class="card stat"><span class="k">{{ icon('check-circle') }} Lessons done</span><span class="v" data-stat="lessons">-</span><span class="s" data-stat="points">&nbsp;</span></article>
+    <article class="card stat"><span class="k">{{ icon('clock') }} Video left</span><span class="v" data-stat="hours">-</span><span class="s">hours at your pace</span></article>
+    <article class="card stat"><span class="k">{{ icon('calendar') }} Estimated finish</span><span class="v" data-stat="finish">-</span><span class="s" data-stat="pace">&nbsp;</span></article>
+  </div>
+
+  <div class="two-col">
+    <div class="stack">
+      <section class="card">
+        <div class="card-head"><h2>Your path</h2><a class="btn btn-text btn-sm" href="{{ url_for('pages.roadmap') }}">Open curriculum {{ icon('arrow-right') }}</a></div>
+        <div data-phases><div class="skeleton h-40"></div></div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>AI gap analysis</h2><button class="btn btn-ghost btn-sm" type="button" data-gap>{{ icon('sparkles') }} Analyse my gaps</button></div>
+        <p class="muted small">A short read on your weakest area and what to do this week.</p>
+        <p class="insight" data-gap-result hidden></p>
+        <p class="muted tiny" data-gap-source></p>
+      </section>
+    </div>
+
+    <aside class="stack">
+      <section class="card">
+        <div class="card-head"><h2>Study plan</h2><span class="streak" data-streak hidden>{{ icon('flame') }}<span data-streak-text></span></span></div>
+        <p class="muted small">Hours you study per day</p>
+        <div class="chips" role="group" aria-label="Hours per day" data-pace>
+          {% for h in ['0.5', '1', '1.5', '2', '3', '4'] %}<button type="button" class="chip" aria-pressed="false" data-hours="{{ h }}">{{ h }} h</button>{% endfor %}
+        </div>
+        <p class="muted small plan-note" data-plan-note></p>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>Ask your mentor</h2></div>
+        <div class="suggest">
+          <a class="btn btn-ghost btn-sm suggest-link" href="{{ url_for('pages.mentor', q='What should I start with?') }}">What should I start with?</a>
+          <a class="btn btn-ghost btn-sm suggest-link" href="{{ url_for('pages.mentor', q='How long will this take?') }}">How long will this take?</a>
+          <a class="btn btn-ghost btn-sm suggest-link" href="{{ url_for('pages.mentor', q='How do I prepare for interviews?') }}">How do I prepare for interviews?</a>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-head"><h2>Recently completed</h2></div>
+        <ul class="recent" data-recent><li class="muted small">Nothing yet. Finish your first lesson to see it here.</li></ul>
+      </section>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/page-dashboard.js') }}" defer></script>{% endblock %}
