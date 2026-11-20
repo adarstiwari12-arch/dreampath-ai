@@ -1,0 +1,80 @@
+{# about.html - About DreamPath AI platform, mission, and academic background. #}
+{% extends "base.html" %}
+{% block title %}About DreamPath AI · AI-Powered Engineering Career Intelligence{% endblock %}
+{% block description %}Learn about DreamPath AI, an academic initiative helping engineering students navigate placement preparation with structured roadmaps and real progress tracking.{% endblock %}
+{% block content %}
+<section class="container page">
+  <header class="page-head">
+    <p class="eyebrow">Academic Project</p>
+    <h1>About DreamPath AI</h1>
+    <p class="lead">Bridging the gap between engineering curriculum and competitive placement outcomes through structured, outcome-driven learning roadmaps.</p>
+  </header>
+
+  <div class="two-col">
+    <div class="stack">
+      <article class="card">
+        <h2>Our Mission</h2>
+        <p>Every year, hundreds of thousands of engineering students enter their final years facing an overwhelming, fragmented landscape of interview preparation. Standard college syllabi rarely match the expectations of modern product, core, and service recruiters.</p>
+        <p>DreamPath AI was conceived to give every engineering student—regardless of their college tier—a clear, verifiable, step-by-step roadmap tailored specifically to their branch and target package in LPA (Lakhs Per Annum).</p>
+      </article>
+
+      <article class="card">
+        <h2>Core Principles: Why We Built It Differently</h2>
+        <ul class="ticks">
+          <li>
+            <strong>Verifiable Arithmetic, Not AI Hype:</strong>
+            The Dream Meter is calculated strictly through weighted mathematical progress across completed lessons. AI provides personalized recommendations and gap analysis, but never fabricates scores.
+          </li>
+          <li>
+            <strong>Adaptive Depth by Package Tier:</strong>
+            A 4 LPA role requires fundamental mastery, while a 25+ LPA role requires deep systems thinking and advanced projects. Our curriculum expands dynamically based on target package.
+          </li>
+          <li>
+            <strong>Faculty Oversight:</strong>
+            Roadmap modules and verified status are reviewed by academic mentors to ensure technical accuracy and rigor.
+          </li>
+          <li>
+            <strong>Zero Fluff, Zero Dark Patterns:</strong>
+            No artificial timers, no locked paywalls, no fake counters or manufactured social proof. Pure learning intelligence.
+          </li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Academic Affiliation</h2>
+        <p>DreamPath AI is developed as an academic engineering initiative:</p>
+        <ul class="context-list">
+          <li><span>Course</span><span class="strong">Mini Project (BCC-351)</span></li>
+          <li><span>Division</span><span class="strong">Group G1, CSE-1</span></li>
+          <li><span>Institution</span><span class="strong">IMS Engineering College, Ghaziabad</span></li>
+          <li><span>Project Supervisor</span><span class="strong">Dr. Sonali Mathur</span></li>
+        </ul>
+      </article>
+    </div>
+
+    <aside class="stack">
+      <div class="card">
+        <h3>Platform Highlights</h3>
+        <ul class="side-list">
+          <li><span>Supported Streams</span><span class="strong num">5 Core Branches</span></li>
+          <li><span>Curriculum Phases</span><span class="strong num">5 Phases Each</span></li>
+          <li><span>Package Tiers</span><span class="strong num">4 Tiers (3 to 60+ LPA)</span></li>
+          <li><span>AI Mentoring</span><span class="strong">OpenAI-Compatible &amp; Rules</span></li>
+        </ul>
+        <hr class="divider">
+        {% if g.user and g.user['role'] == 'student' %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('pages.dashboard') }}">Go to My Learning</a>
+        {% elif not g.user %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('auth.register') }}">Create Free Account</a>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h3>Need Help?</h3>
+        <p class="muted small">Have questions about how your stream's roadmap was constructed or how to get faculty verification for additional materials?</p>
+        <a class="btn btn-ghost btn-sm btn-block" href="{{ url_for('pages.faq') }}">Read our FAQs</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

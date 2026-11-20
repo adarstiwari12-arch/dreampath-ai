@@ -1,0 +1,101 @@
+{# faq.html - Comprehensive student and faculty FAQ. #}
+{% extends "base.html" %}
+{% block title %}Frequently Asked Questions · DreamPath AI{% endblock %}
+{% block description %}Clear answers to common questions about DreamPath AI, the Dream Meter formula, package tiers, and AI mentoring.{% endblock %}
+{% block content %}
+<section class="container page">
+  <header class="page-head">
+    <p class="eyebrow">Knowledge Base</p>
+    <h1>Frequently Asked Questions</h1>
+    <p class="lead">Everything you need to know about preparing for your dream placement with DreamPath AI.</p>
+  </header>
+
+  <div class="two-col">
+    <div class="stack">
+      <div class="curriculum">
+        <details class="section-card" open>
+          <summary>
+            <span class="section-title">What is DreamPath AI and how does it help me?</span>
+          </summary>
+          <div class="faq-body">
+            <p>DreamPath AI is a structured skill and career intelligence platform designed for engineering students. Instead of searching across hundreds of random YouTube playlists or tutorials, you choose your branch (CSE, ECE, EEE, Mechanical, or Civil) and your dream salary target in LPA (Lakhs Per Annum). The platform organizes your study journey into 5 ordered phases and calculates your placement readiness using the weighted Dream Meter.</p>
+          </div>
+        </details>
+
+        <details class="section-card">
+          <summary>
+            <span class="section-title">How is the Dream Meter calculated?</span>
+          </summary>
+          <div class="faq-body">
+            <p>The Dream Meter uses transparent arithmetic rather than opaque guessing:</p>
+            <p class="formula">Dream Meter % = (Sum of weight of completed lessons &divide; Sum of weight of all lessons in your tier) &times; 100</p>
+            <p>Each lesson is assigned a weight from 1 to 10 points based on its importance in recruiter interviews (e.g. Data Structures carries 10 points, while basic tools carry 3 points). Ticking a heavy lesson advances your score faster because it delivers greater placement leverage.</p>
+          </div>
+        </details>
+
+        <details class="section-card">
+          <summary>
+            <span class="section-title">What do the package tiers mean?</span>
+          </summary>
+          <div class="faq-body">
+            <p>Your target LPA maps directly to one of four curriculum depth tiers:</p>
+            <ul class="ticks">
+              <li><strong>Starter (3 - 6 LPA):</strong> Core engineering fundamentals, essential programming/tools, and standard aptitude needed for service and core sector recruiters.</li>
+              <li><strong>Growth (6 - 12 LPA):</strong> Intermediate subjects, database administration, web/embedded projects, and product-focused problem solving.</li>
+              <li><strong>Pro (12 - 25 LPA):</strong> High-level system design, operating systems internals, advanced project development, and competitive coding.</li>
+              <li><strong>Elite (25 - 60+ LPA):</strong> Distributed systems, research-level foundations, cloud microservices, and specialized domain mastery.</li>
+            </ul>
+            <p>When you raise your target LPA in your settings, deeper lessons unlock automatically.</p>
+          </div>
+        </details>
+
+        <details class="section-card">
+          <summary>
+            <span class="section-title">Can I change my stream or target package later?</span>
+          </summary>
+          <div class="faq-body">
+            <p>Yes, at any time! Visit <strong>Change plan</strong> in your dashboard or account menu. You can slide your target LPA or switch your stream. Your completed progress in each stream is saved independently in the database, so switching back will never erase your earlier ticks.</p>
+          </div>
+        </details>
+
+        <details class="section-card">
+          <summary>
+            <span class="section-title">How does the AI Mentor work?</span>
+          </summary>
+          <div class="faq-body">
+            <p>The AI Mentor looks at your current stream, selected target package, completed phases, and remaining high-weight lessons. It answers questions about what to study next, how to manage your daily hours, and how to prepare for placement interviews.</p>
+            <p>If an LLM API key is configured by the deployment, answers are streamed using modern generative language models. If not, the platform seamlessly uses intelligent rule-based algorithms based on your actual database progress, ensuring you never receive a broken response or hallucinated curriculum.</p>
+          </div>
+        </details>
+
+        <details class="section-card">
+          <summary>
+            <span class="section-title">What does the "Verified" badge on a lesson mean?</span>
+          </summary>
+          <div class="faq-body">
+            <p>A "Verified" badge signifies that the lesson link, curriculum syllabus, and expected learning outcome have been personally reviewed and confirmed by our faculty members and subject matter coordinators.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <aside class="stack">
+      <div class="card">
+        <h3>Ready to start?</h3>
+        <p class="muted small">Set your target package and explore your branch curriculum in under two minutes.</p>
+        {% if g.user and g.user['role'] == 'student' %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('pages.roadmap') }}">Go to Curriculum</a>
+        {% elif not g.user %}
+          <a class="btn btn-primary btn-block" href="{{ url_for('auth.register') }}">Sign Up Free</a>
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h3>Have more questions?</h3>
+        <p class="muted small">If you need help or want to suggest verified resources for your branch, reach out to your faculty coordinators or project mentors.</p>
+        <a class="btn btn-ghost btn-sm btn-block" href="{{ url_for('pages.about') }}">About the Project</a>
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

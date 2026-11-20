@@ -20,7 +20,7 @@ def make_app(**extra):
     fd, path = tempfile.mkstemp(suffix=".db")
     os.close(fd)
     app = create_app({"TESTING": True, "DATABASE": path, "SECRET_KEY": "test-key",
-                      "RATELIMIT_ENABLED": False, "ANTHROPIC_API_KEY": "", **extra})
+                      "RATELIMIT_ENABLED": False, "LLM_API_KEY": "", "LLM_BASE_URL": "", **extra})
     app._db_path = path
     return app
 
@@ -256,7 +256,7 @@ class SecurityTests(Base):
     def test_no_inline_scripts_or_styles(self):
         self.register()
         self.setup_profile("cse", 10)
-        for path in ("/", "/login", "/register", "/streams/cse", "/setup", "/dashboard", "/roadmap", "/mentor", "/account", "/nope"):
+        for path in ("/", "/login", "/register", "/streams/cse", "/setup", "/dashboard", "/roadmap", "/mentor", "/account", "/nope", "/about", "/faq", "/privacy", "/terms"):
             html = self.client.get(path).get_data(as_text=True)
             self.assertNotRegex(html, r"<script(?![^>]*\bsrc=)[^>]*>")
             self.assertNotRegex(html, r'\sstyle="')
@@ -613,6 +613,18 @@ class PublicPagesAndRedirectTests(Base):
         with self.app.app_context():
             f = self.app.jinja_env.filters["duration"]
             self.assertEqual((f(45), f(300), f(90), f(60)), ("45 min", "5 h", "1 h 30 min", "1 h"))
+
+    def test_informational_pages_and_legal(self):
+        for path, keyword in (
+            ("/about", "Dr. Sonali Mathur"),
+            ("/faq", "Frequently Asked Questions"),
+            ("/privacy", "Privacy Policy"),
+            ("/terms", "Terms of Service"),
+        ):
+            r = self.client.get(path)
+            self.assertEqual(r.status_code, 200, f"Failed on {path}")
+            self.assertIn(keyword, r.get_data(as_text=True))
+
 
 
 if __name__ == "__main__":

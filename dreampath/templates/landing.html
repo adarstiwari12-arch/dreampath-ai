@@ -8,7 +8,6 @@
 <section class="hero">
   <div class="container hero-grid">
     <div>
-      <p class="eyebrow">Free for engineering students</p>
       <h1>Plan your path to the package you want.</h1>
       <p class="lead">Pick your stream, set a target in LPA, and follow an ordered video curriculum. Tick off lessons as you finish them and the Dream Meter shows how close you are, with an AI mentor for what to do next.</p>
       <div class="hero-actions">
@@ -31,12 +30,20 @@
     </div>
 
     <div class="card hero-card" id="meter-demo" data-demo>
-      <div class="card-head"><h2>Try the Dream Meter</h2><span class="badge badge-brand">Live demo</span></div>
+      <div class="card-head">
+        <div>
+          <h2>Try the Dream Meter</h2>
+          <p class="muted tiny">Interactive live arithmetic preview</p>
+        </div>
+        <span class="badge badge-brand">Live demo</span>
+      </div>
       <div class="demo-body">
         <div class="ring-wrap ring-sm" data-ring></div>
         <ul class="demo-list" data-demo-list></ul>
       </div>
-      <p class="muted small demo-formula" data-demo-formula></p>
+      <div class="demo-footer">
+        <p class="demo-formula" data-demo-formula></p>
+      </div>
     </div>
   </div>
 </section>
@@ -53,12 +60,13 @@
 <section class="section" id="streams">
   <div class="container">
     <div class="section-head">
+      <span class="eyebrow">Supported Disciplines</span>
       <h2>Choose your stream</h2>
       <p>Each stream is a complete path from foundations to placement edge. Preview the curriculum before you commit.</p>
     </div>
     <div class="grid grid-5">
       {% for s in streams %}
-      <a class="stream-card" href="{{ url_for('pages.stream_detail', slug=s.slug) }}">
+      <a class="stream-card thumb-{{ s.slug }}" href="{{ url_for('pages.stream_detail', slug=s.slug) }}">
         {{ banner(s.slug) }}
         <span class="body">
           <h3>{{ s.name }}</h3>
@@ -73,7 +81,11 @@
 
 <section class="section section-alt" id="how">
   <div class="container">
-    <div class="section-head"><h2>From choice to measurable progress</h2><p>Five steps, and every one of them is saved to your account.</p></div>
+    <div class="section-head">
+      <span class="eyebrow">Outcome Blueprint</span>
+      <h2>From choice to measurable progress</h2>
+      <p>Five steps, and every one of them is saved to your account.</p>
+    </div>
     <ol class="step-grid">
       <li><h3>Choose your stream</h3><p>Each branch loads its own skill map. Not sure? Describe what you enjoy and the AI suggests one.</p></li>
       <li><h3>Set your dream package</h3><p>Slide to a target in LPA. It becomes a tier that decides how deep your roadmap goes.</p></li>
@@ -87,6 +99,7 @@
 <section class="section" id="meter">
   <div class="container split">
     <div>
+      <span class="eyebrow">Deterministic Math</span>
       <h2>A meter you can explain</h2>
       <p class="muted">Heavier topics count for more than lighter ones. The score is plain arithmetic, so students can trust it and faculty can check it. AI helps with recommendations and mentoring, but never decides your score.</p>
       <p class="formula">Dream Meter % = (weight of ticked lessons &divide; weight of all lessons) &times; 100</p>
@@ -107,33 +120,69 @@
 
 <section class="section section-alt">
   <div class="container">
-    <div class="section-head"><h2>Smart where it helps, simple where it matters</h2></div>
+    <div class="section-head">
+      <span class="eyebrow">Platform Architecture</span>
+      <h2>Smart where it helps, simple where it matters</h2>
+    </div>
     <div class="grid grid-3">
-      <article class="feature"><span class="icon-tile">{{ icon('sparkles') }}</span><h3>AI mentor and gap analysis</h3><p>Ask what to do next, how long it will take, or where your weakest phase is. Answers use your own progress data.</p></article>
-      <article class="feature"><span class="icon-tile">{{ icon('calendar') }}</span><h3>Study plan and streaks</h3><p>Choose hours per day and see when you will finish. Keep a streak going with one lesson a day.</p></article>
-      <article class="feature"><span class="icon-tile">{{ icon('shield') }}</span><h3>Faculty verified, privacy first</h3><p>Faculty review every lesson. Passwords are hashed and you can delete your account and data any time.</p></article>
+      <article class="feature">
+        <span class="icon-tile">{{ icon('sparkles') }}</span>
+        <h3>AI mentor and gap analysis</h3>
+        <p>Ask what to do next, how long it will take, or where your weakest phase is. Answers use your own progress data.</p>
+      </article>
+      <article class="feature">
+        <span class="icon-tile">{{ icon('calendar') }}</span>
+        <h3>Study plan and streaks</h3>
+        <p>Choose hours per day and see when you will finish. Keep a streak going with one lesson a day.</p>
+      </article>
+      <article class="feature">
+        <span class="icon-tile">{{ icon('shield') }}</span>
+        <h3>Faculty verified, privacy first</h3>
+        <p>Faculty review every lesson. Passwords are hashed and you can delete your account and data any time.</p>
+      </article>
     </div>
   </div>
 </section>
 
 <section class="section" id="faq">
   <div class="container">
-    <div class="section-head"><h2>Questions students ask</h2></div>
+    <div class="section-head">
+      <span class="eyebrow">Frequently Asked Questions</span>
+      <h2>Questions students ask</h2>
+    </div>
     <div class="faq">
-      <details><summary>Is DreamPath AI free?</summary><p>Yes. It is a college project built to help students plan their learning, so there are no plans or payments.</p></details>
-      <details><summary>Where do the videos come from?</summary><p>Each lesson links to a YouTube search for the topic, and faculty can replace any lesson with a specific, verified video. Lessons marked Verified have been reviewed.</p></details>
-      <details><summary>How is the Dream Meter calculated?</summary><p>Every lesson has a weight from 1 to 10. Your meter is the weight you have ticked divided by the total weight of your roadmap, as a percentage.</p></details>
-      <details><summary>Does a higher package make my roadmap longer?</summary><p>Yes. A higher target unlocks more advanced lessons, so your roadmap and your meter reflect what that goal actually asks for.</p></details>
-      <details><summary>Do I need an AI key to use the mentor?</summary><p>No. Without a key the mentor answers from built-in rules using your own progress. With a key it gives richer, conversational answers.</p></details>
+      <details>
+        <summary>Is DreamPath AI free?</summary>
+        <p>Yes. It is an academic project built to help engineering students plan their learning and placement journey, so there are no paywalls or subscription fees.</p>
+      </details>
+      <details>
+        <summary>Where do the videos come from?</summary>
+        <p>Each lesson links to a verified tutorial query or curated video, reviewed by faculty coordinators. Lessons marked "Verified" have been vetted for curriculum alignment.</p>
+      </details>
+      <details>
+        <summary>How is the Dream Meter calculated?</summary>
+        <p>Every lesson carries a weight from 1 to 10 points. Your Dream Meter percentage is the total weight of your completed lessons divided by the total weight of all lessons in your tier.</p>
+      </details>
+      <details>
+        <summary>Does a higher package make my roadmap longer?</summary>
+        <p>Yes. A higher target package (LPA) unlocks more advanced lessons and projects, so your roadmap and meter reflect what that caliber of placement actually requires.</p>
+      </details>
+      <details>
+        <summary>Do I need an AI key to use the mentor?</summary>
+        <p>No. When an LLM API key is not configured, the mentor automatically uses intelligent, deterministic rule-based algorithms based on your actual database progress.</p>
+      </details>
     </div>
   </div>
 </section>
 
 <section class="cta-band">
   <div class="container row-between">
-    <div><h2>Ready to see your number?</h2><p>Create an account and have your roadmap in under a minute.</p></div>
+    <div>
+      <h2>Ready to see your number?</h2>
+      <p>Create an account and have your personalized roadmap in under a minute.</p>
+    </div>
     {% if g.user %}
-      <a class="btn btn-primary btn-lg" href="{{ url_for('pages.dashboard') }}">Open dashboard</a>
+      <a class="btn btn-primary btn-lg" href="{{ url_for('pages.dashboard') }}">Open my dashboard</a>
     {% else %}
       <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}">Create a free account</a>
     {% endif %}

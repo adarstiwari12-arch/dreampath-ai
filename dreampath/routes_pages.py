@@ -85,3 +85,24 @@ def mentor():
 @faculty_required
 def faculty():
     return render_template("faculty.html", phases=PHASES)
+
+
+@bp.get("/about")
+def about():
+    return render_template("about.html")
+
+
+@bp.get("/faq")
+def faq():
+    return render_template("faq.html", tiers=TIERS)
+
+
+@bp.get("/privacy")
+def privacy():
+    return render_template("privacy.html")
+
+
+@bp.get("/terms")
+def terms():
+    return render_template("terms.html")
+

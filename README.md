@@ -45,7 +45,25 @@ Open http://127.0.0.1:5000. The database, 5 streams and 83 lessons are created o
 | Create a faculty account | `flask --app app create-faculty` |
 | Reset a password / clear a lockout | `flask --app app reset-password` |
 | Run the tests (66) | `python -m unittest discover -s tests -v` |
-| Enable the AI mentor | put `ANTHROPIC_API_KEY=...` in `.env` and restart |
+| Enable the AI mentor | put `LLM_API_KEY=...` and `LLM_BASE_URL=...` in `.env` and restart |
+
+## AI API key (free)
+
+DreamPath AI works **without** an API key: the AI mentor uses built-in rule-based recommendations from the student's own progress data.
+
+To unlock richer, conversational AI answers, connect a free key from any OpenAI-compatible provider (OpenRouter, Open Code, Together, Groq, …):
+
+1. Get a free key from your provider.
+2. Add it to `.env`:
+   ```
+   LLM_API_KEY=your-key-here
+   LLM_BASE_URL=https://openrouter.ai/api/v1
+   LLM_MODEL=openrouter/auto
+   ```
+3. Restart the server. The mentor will use the LLM when available and fall back to rules otherwise.
+
+The key is never logged, and user text is sent as data only (guard-railed prompts). Everything still works if the key is not set.
+
 
 ## Project structure
 

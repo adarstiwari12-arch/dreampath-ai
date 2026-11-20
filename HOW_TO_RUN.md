@@ -138,12 +138,12 @@ flask --app app create-faculty
 
 Enter a name, an email and a password (8+ characters with a letter and a number). Then log in at `/login` with those details. Faculty land on the **Faculty console**, where they can verify, add, edit and delete lessons and replace a topic search with a specific video link.
 
-### Turn on the real AI mentor
+### Turn on the AI mentor
 
 The app works fully without this, using built-in rules. To use an AI model instead:
 
 1. Open the `.env` file in VS Code.
-2. Put your key after `ANTHROPIC_API_KEY=` (no spaces or quotes).
+2. Put your free provider key after `LLM_API_KEY=` (no spaces or quotes), and set `LLM_BASE_URL` to your provider's endpoint (for example `https://openrouter.ai/api/v1` for OpenRouter).
 3. Stop the server (Ctrl + C) and start it again.
 
 The mentor page shows whether it is answering with the AI model or with rules.

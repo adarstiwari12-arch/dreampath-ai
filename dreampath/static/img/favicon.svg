@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#0e4f55"/><path d="M7 24c6 0 4-8 9-8s3-8 9-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="25" cy="8" r="2.6" fill="#f2b45a"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-label="DreamPath AI">
+  <defs>
+    <linearGradient id="dp-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0f766e"/>
+    </linearGradient>
+    <linearGradient id="dp-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+  </defs>
+  <!-- Modern squircle tile -->
+  <rect width="32" height="32" rx="8" fill="url(#dp-grad)"/>
+  <!-- Smooth ascending path trajectory with milestone markers -->
+  <path d="M 6 25 C 10 25, 11 17, 16 17 C 20 17, 21 8, 25 8" fill="none" stroke="#ffffff" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Intermediate milestone pulse -->
+  <circle cx="16" cy="17" r="1.6" fill="#ffffff" opacity="0.85"/>
+  <!-- Placement destination dot -->
+  <circle cx="25" cy="8" r="3.2" fill="url(#dp-accent)" stroke="#ffffff" stroke-width="1.25"/>
+</svg>

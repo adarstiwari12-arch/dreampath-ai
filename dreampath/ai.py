@@ -1,7 +1,8 @@
 """AI layer.
 
 Every feature works in two modes:
-  * LLM mode  - when ANTHROPIC_API_KEY is set, the answer comes from the model.
+  * LLM mode  - when LLM_API_KEY is set, the answer comes from an
+                OpenAI-compatible model endpoint (OpenRouter, Open Code, Together, Groq, …).
   * Rule mode - otherwise (or if the API call fails), a deterministic fallback
                 built from the student's own roadmap data is returned.
 
@@ -19,35 +20,34 @@ from flask import current_app
 
 log = logging.getLogger(__name__)
 
-API_URL = "https://api.anthropic.com/v1/messages"
-API_VERSION = "2023-06-01"
-
 # ------------------------------------------------------------------ LLM call
 
 
 def llm_enabled() -> bool:
-    return bool(current_app.config.get("ANTHROPIC_API_KEY"))
+    return bool(current_app.config.get("LLM_API_KEY") and current_app.config.get("LLM_BASE_URL"))
 
 
 def call_llm(system: str, messages: list, max_tokens: int = 450) -> str | None:
     """Return the model's text, or None if unavailable or on any error."""
     if not llm_enabled():
         return None
+    base_url = current_app.config["LLM_BASE_URL"]
+    api_path = current_app.config["LLM_API_PATH"]
+    api_url = base_url + api_path
     payload = json.dumps({
         "model": current_app.config["LLM_MODEL"],
         "max_tokens": max_tokens,
-        "system": system,
-        "messages": messages,
+        "temperature": 0.7,
+        "messages": [{"role": "system", "content": system}] + messages,
     }).encode("utf-8")
-    req = urllib.request.Request(API_URL, data=payload, method="POST", headers={
+    req = urllib.request.Request(api_url, data=payload, method="POST", headers={
         "content-type": "application/json",
-        "x-api-key": current_app.config["ANTHROPIC_API_KEY"],
-        "anthropic-version": API_VERSION,
+        "authorization": f"Bearer {current_app.config['LLM_API_KEY']}",
     })
     try:
-        with urllib.request.urlopen(req, timeout=25) as resp:  # noqa: S310 (fixed https URL)
+        with urllib.request.urlopen(req, timeout=25) as resp:  # noqa: S310 (user-configured URL)
             data = json.loads(resp.read().decode("utf-8"))
-        text = "".join(block.get("text", "") for block in data.get("content", []) if block.get("type") == "text")
+        text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
         return text.strip() or None
     except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
         log.warning("LLM call failed: %s", exc.__class__.__name__)  # never log the key

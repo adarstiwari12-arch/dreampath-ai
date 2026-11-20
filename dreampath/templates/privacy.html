@@ -1,0 +1,36 @@
+{# privacy.html - Privacy policy document. #}
+{% extends "base.html" %}
+{% block title %}Privacy Policy · DreamPath AI{% endblock %}
+{% block description %}Privacy policy for DreamPath AI student and faculty users.{% endblock %}
+{% block content %}
+<section class="container-narrow page">
+  <header class="page-head">
+    <p class="eyebrow">Legal &amp; Transparency</p>
+    <h1>Privacy Policy</h1>
+    <p class="muted">Effective Date: November 2026</p>
+  </header>
+
+  <article class="card">
+    <h2>1. Information We Collect</h2>
+    <p>DreamPath AI is built with data minimization in mind. We collect only what is strictly required to deliver your learning roadmaps and track your placement readiness:</p>
+    <ul>
+      <li><strong>Account Details:</strong> Your name, email address, and securely hashed passwords (using industry-standard Argon2/PBKDF2/scrypt one-way hashing algorithms). We never store raw passwords.</li>
+      <li><strong>Learning Profile:</strong> Your selected engineering branch, target package (LPA), and preferred daily study hours.</li>
+      <li><strong>Progress Records:</strong> Lessons you mark as completed, including timestamps used to calculate consecutive day streaks.</li>
+      <li><strong>AI Chat Messages:</strong> Questions asked to the AI mentor, saved strictly to maintain context in your personal session.</li>
+    </ul>
+
+    <h2>2. How Your Data Is Used</h2>
+    <p>Your data is used solely to compute your Dream Meter score, update your estimated completion dates, and generate personalized curriculum recommendations. We do not sell, rent, monetize, or transfer your personal information to third parties or advertising networks.</p>
+
+    <h2>3. Security &amp; Storage</h2>
+    <p>Session authentication uses secure, HTTP-only, SameSite cookies with strict CSRF protection. Passwords are never logged or stored in plain text. Rate limiting is enforced on sensitive endpoints to protect student accounts from brute-force attacks.</p>
+
+    <h2>4. Account Deletion &amp; Data Control</h2>
+    <p>You have full ownership of your data. At any time, you may reset your progress or permanently delete your account and all associated records directly from your <strong>Account settings</strong> page.</p>
+
+    <h2>5. Contact &amp; Oversight</h2>
+    <p>For questions or feedback regarding privacy or data handling, please consult your department faculty coordinator or supervisor at IMS Engineering College, Ghaziabad.</p>
+  </article>
+</section>
+{% endblock %}

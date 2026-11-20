@@ -37,7 +37,8 @@ def init_security(app) -> None:
         resp.headers.setdefault(
             "Content-Security-Policy",
             "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; "
-            "connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; "
+            "connect-src 'self'; font-src 'self'; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; "
+            "object-src 'none'; base-uri 'self'; "
             "form-action 'self'; frame-ancestors 'none'",
         )
         resp.headers.setdefault("X-Content-Type-Options", "nosniff")

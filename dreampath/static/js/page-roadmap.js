@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const root = document.querySelector("[data-roadmap]");
   if (!root) return;
-  const { api, el, toast, formatDuration, formatDate, ring } = window.DP;
+  const { api, el, toast, formatDuration, formatDate, ring, openLessonModal } = window.DP;
   const q = (s) => root.querySelector(s);
   const container = q("[data-phases]");
   const search = q("[data-search]");
@@ -22,6 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return list;
   }
 
+  function openModal(step) {
+    openLessonModal(step, (updatedStep, r) => {
+      Object.assign(data, { meter: r.meter, plan: r.plan, streak: r.streak, recent: r.recent });
+      render();
+    });
+  }
+
   function renderSide() {
     const m = data.meter, plan = data.plan;
     meter.update(m.percent);
@@ -35,7 +42,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (n) {
       q("[data-next-title]").textContent = n.title;
       q("[data-next-meta]").textContent = `${n.phase_name} · ${formatDuration(n.duration_min)} · ${n.weight} points`;
-      q("[data-next-link]").href = n.url;
+      const nextBtn = q("[data-next-link]");
+      nextBtn.href = n.url;
+      nextBtn.onclick = (e) => {
+        e.preventDefault();
+        openModal(n);
+      };
     }
   }
 
@@ -43,18 +55,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const id = `step-${s.id}`;
     const box = el("input", { type: "checkbox", id, class: "lesson-check", checked: s.done, "aria-label": `Mark ${s.title} as done` });
     box.addEventListener("change", () => toggle(s, box));
+
+    const titleTrigger = el("button", {
+      type: "button",
+      class: "lesson-link-trigger",
+      text: s.title,
+      onclick: () => openModal(s)
+    });
+
+    const watchBtn = el("button", {
+      type: "button",
+      class: "btn btn-ghost btn-sm",
+      text: "Watch",
+      onclick: () => openModal(s)
+    });
+
     return el("li", { class: "lesson" + (s.done ? " is-done" : "") + (s.id === nextId ? " is-next" : "") },
       box,
       el("div", {},
         el("p", { class: "lesson-title" },
-          el("span", { class: "t", text: s.title }),
+          titleTrigger,
           s.id === nextId ? el("span", { class: "badge badge-brand", text: "Up next" }) : null,
           s.verified ? el("span", { class: "badge badge-ok", text: "Verified" }) : null),
         el("div", { class: "lesson-meta" },
           el("span", { text: formatDuration(s.duration_min) }),
           el("span", { text: `${s.weight} pts` }),
           el("span", { text: `${value(s).toFixed(1)} pts/hour` }))),
-      el("a", { class: "btn btn-ghost btn-sm", href: s.url, target: "_blank", rel: "noopener noreferrer", text: "Watch" }));
+      watchBtn);
   }
 
   function render() {
@@ -89,11 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
       step.done = wanted;
       Object.assign(data, { meter: r.meter, plan: r.plan, streak: r.streak, recent: r.recent });
       render();
-      document.getElementById(`step-${step.id}`)?.focus();  // keep the keyboard position after re-render
+      document.getElementById(`step-${step.id}`)?.focus();  // keep keyboard focus after re-render
       if (wanted) toast(r.streak > 1 ? `Lesson complete. ${r.streak}-day streak!` : "Lesson complete.");
     } catch (e) {
-      box.checked = !wanted; toast(e.message, "error");
-    } finally { box.disabled = false; }
+      box.checked = !wanted;
+      toast(e.message, "error");
+    } finally {
+      box.disabled = false;
+    }
   }
 
   q("[data-filter]") && root.querySelectorAll("[data-filter]").forEach((b) => b.addEventListener("click", () => {
@@ -104,7 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
   q("[data-sort]").addEventListener("change", (e) => { sort = e.target.value; render(); });
   search.addEventListener("input", () => { query = search.value.trim().toLowerCase(); render(); });
   expandBtn.addEventListener("click", () => {
-    allOpen = !allOpen; expandBtn.textContent = allOpen ? "Collapse all" : "Expand all";
+    allOpen = !allOpen;
+    expandBtn.textContent = allOpen ? "Collapse all" : "Expand all";
     if (!allOpen) openSections.clear();
     render();
   });

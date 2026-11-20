@@ -51,8 +51,11 @@ def build_config() -> dict:
         "PERMANENT_SESSION_LIFETIME": 60 * 60 * 24 * 7,  # 7 days
         "MAX_CONTENT_LENGTH": 64 * 1024,  # 64 KB request bodies are plenty
         "RATELIMIT_ENABLED": True,
-        "ANTHROPIC_API_KEY": os.environ.get("ANTHROPIC_API_KEY", "").strip(),
-        "LLM_MODEL": os.environ.get("LLM_MODEL", "claude-sonnet-5-5").strip(),
+        # Optional LLM provider (any OpenAI-compatible endpoint: OpenRouter, Open Code, Together, Groq, …)
+        "LLM_API_KEY": os.environ.get("LLM_API_KEY", "").strip(),
+        "LLM_BASE_URL": os.environ.get("LLM_BASE_URL", "").strip().rstrip("/"),
+        "LLM_API_PATH": os.environ.get("LLM_API_PATH", "/chat/completions").strip(),
+        "LLM_MODEL": os.environ.get("LLM_MODEL", "openrouter/auto").strip(),
         # Set TRUST_PROXY=true only when running behind a reverse proxy you control
         # (nginx, a platform router). It makes rate limits use the real client IP.
         "TRUST_PROXY": os.environ.get("TRUST_PROXY", "").lower() == "true",
